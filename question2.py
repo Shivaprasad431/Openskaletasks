@@ -46,7 +46,7 @@ def find_minimum_price(file_path, food_items):
         # Check for same row prices
         for row in data['rows']:
             found_items = set()
-            row_price = row['price']
+            row_price = 0
 
             # Calculate the total price if the food items are found in the same row
             for i in range(1, 6):
@@ -55,12 +55,14 @@ def find_minimum_price(file_path, food_items):
 
                 if food_item in food_items:
                     found_items.add(food_item)
+                    row_price += row['price']
 
-            # If all requested food items are found in this row, add the row price to total prices
+            # If all requested food items are found in this row, add to total prices
             if found_items.issuperset(food_items):
                 total_prices.append(row_price)
 
-        # Check for different rows prices (if needed)
+        # Check for different rows prices
+        # Create combinations of prices for the required food items across different rows
         food_item_indices = {item: [] for item in food_items}
 
         # Populate the indices for each food item
@@ -69,7 +71,7 @@ def find_minimum_price(file_path, food_items):
                 if item in row.values:
                     food_item_indices[item].append(row)
 
-        # Now create combinations of prices for the required food items across different rows
+        # Now create combinations of prices
         if len(food_items) > 1:
             for combination in itertools.product(*[food_item_indices[item] for item in food_items]):
                 # Check if the combination is from the same restaurant
@@ -92,7 +94,7 @@ def find_minimum_price(file_path, food_items):
 
 # Main execution
 if __name__ == "__main__":
-    file_path = 'data.csv'  # Ensure the path to your CSV file is correct
-    user_input = input("Enter food items separated by spaces: ")
-    result = find_minimum_price(file_path, user_input)
-    print(result)
+  file_path = 'data.csv'  # Ensure the path to your CSV file is correct
+  user_input = input("Enter food items separated by spaces: ")
+  result = find_minimum_price(file_path, user_input)
+  print(result)
